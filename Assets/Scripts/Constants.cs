@@ -11,16 +11,17 @@ namespace Project.Constants
 
     public enum EntityType
     {
-        Tree = 0,
-        Root = 1,
-        Stone = 2,
-        Fire = 3,
-        Water = 4,
-        InterestPlace = 5,
-        WatchTower = 6,
-        Medvedka = 7,
-        MedvedkaNest = 8,
-        StoneTrigger = 9,
-        FireTrigger = 10
+        Tree = 1,
+        Root = 2,
+        Rock = 3,
+        Fire = 4,
+        Water = 5,
+        InterestPlace = 6,
+        WatchTower = 7,
+        Medvedka = 8,
+        MedvedkaNest = 9,
+        RockTrigger = 10,
+        FireTrigger = 11,
+        AstralSalvation = 12
     }
 }

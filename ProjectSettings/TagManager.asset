@@ -38,6 +38,27 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Map
+    uniqueID: 3172795477
+    locked: 0
+  - name: Tree
+    uniqueID: 594980445
+    locked: 0
+  - name: InteractiveObject
+    uniqueID: 1688059681
+    locked: 0
+  - name: MedvedkaNest
+    uniqueID: 1716493607
+    locked: 0
+  - name: Rock
+    uniqueID: 2511039569
+    locked: 0
+  - name: Roots
+    uniqueID: 738981679
+    locked: 0
+  - name: Fire
+    uniqueID: 346086779
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
