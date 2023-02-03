@@ -50,6 +50,9 @@ TagManager:
   - name: MedvedkaNest
     uniqueID: 1716493607
     locked: 0
+  - name: Medvedka
+    uniqueID: 269581521
+    locked: 0
   - name: Rock
     uniqueID: 2511039569
     locked: 0
@@ -58,6 +61,9 @@ TagManager:
     locked: 0
   - name: Fire
     uniqueID: 346086779
+    locked: 0
+  - name: HighlightSquare
+    uniqueID: 3175772365
     locked: 0
   - name: Default
     uniqueID: 0

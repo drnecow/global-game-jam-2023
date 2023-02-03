@@ -5,6 +5,7 @@ using UnityEngine;
 public class RootMap : MonoBehaviour
 {
     public static RootMap Instance { get; private set; } // RootMap is a Singleton
+    public RootBlock[,] Roots { get => _roots; }
 
     private RootBlock[,] _roots;
 
@@ -38,12 +39,20 @@ public class RootMap : MonoBehaviour
         else
             Debug.Log($"Invalid coordinates given: ({blockCoords.x}, {blockCoords.y})");
     }
-    // Is it needed if the RootBlock at coords already gets destroyed in Root?..
-    //public void EmptyCellAt(Coords coords)
-    //{
-    //    if (Map.Instance.ValidateCoords(coords))
-    //        _roots[coords.x, coords.y] = null;
-    //    else
-    //        Debug.Log($"Invalid coordinates given: ({coords.x}, {coords.y})");
-    //}
+    
+    public bool IsEmpty(List<Coords> coords)
+    {
+        foreach (Coords coord in coords)
+        {
+            if (Map.Instance.ValidateCoords(coord))
+            {
+                if (_roots[coord.x, coord.y] != null)
+                    return false;
+            }
+
+            return true;
+        }
+
+        return true;
+    }
 }

@@ -8,8 +8,17 @@ public class GameEventSystem : MonoBehaviour
 {
     public static GameEventSystem Instance { get; private set; } // GameEventSystem is a Singleton
 
-    public UnityEvent OnGameWin;
-    public UnityEvent OnGameLose;
+    public UnityEvent OnPlayerTurnPassed;
+    public UnityEvent OnEndTurn;
+
+    public UnityEvent<int> OnTurnTimerValueChanged;
+    public UnityEvent<RootBlock, int> OnRootLifeTimerSet;
+    public UnityEvent<RootBlock, int> OnRootLifeTimerChanged;
+
+    public UnityEvent<Coords> OnRootBlockDestroyed;
+
+    public UnityEvent OnWinGame;
+    public UnityEvent OnLoseGame;
 
     public void Awake()
     {

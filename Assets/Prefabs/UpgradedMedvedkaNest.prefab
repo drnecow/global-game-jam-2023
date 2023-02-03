@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1490993393697686430}
   m_Layer: 0
-  m_Name: MedvedkaNest4
+  m_Name: UpgradedMedvedkaNest4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -40,6 +40,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1490993393712310193}
   - component: {fileID: 1490993393712310192}
+  - component: {fileID: 8838533347439403658}
   m_Layer: 0
   m_Name: Sprite
   m_TagString: Untagged
@@ -99,9 +100,9 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1716493607
-  m_SortingLayer: -4
+  m_SortingLayer: -5
   m_SortingOrder: 0
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 8cb3661ddb8197049b242c84324c1b79, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -109,9 +110,33 @@ SpriteRenderer:
   m_Size: {x: 19.35484, y: 19.35484}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &8838533347439403658
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1490993393712310198}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1eaed529dbffe8408aa16772a03dfff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _cells:
+  - {fileID: 1490993395099977012}
+  - {fileID: 1490993395363801058}
+  - {fileID: 1490993394620450715}
+  - {fileID: 1490993393697686431}
+  _cellDisplacements:
+  - {x: 0, y: 0}
+  - {x: 1, y: 0}
+  - {x: 0, y: 1}
+  - {x: 1, y: 1}
+  _spawnedMedvedka: {fileID: 0}
+  _spawnRate: 1
 --- !u!1 &1490993393716454362
 GameObject:
   m_ObjectHideFlags: 0
@@ -123,7 +148,7 @@ GameObject:
   - component: {fileID: 1490993393716454309}
   - component: {fileID: 1490993393716454311}
   m_Layer: 0
-  m_Name: MedvedkaNest
+  m_Name: UpgradedMedvedkaNest
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -170,6 +195,8 @@ MonoBehaviour:
   - {x: 1, y: 0}
   - {x: 0, y: 1}
   - {x: 1, y: 1}
+  _spawnedMedvedka: {fileID: 2954923067134412545, guid: 09ec0fecae4e63c409ceb3d8b4f18434, type: 3}
+  _spawnRate: 2
 --- !u!1 &1490993394620450715
 GameObject:
   m_ObjectHideFlags: 0
@@ -180,7 +207,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1490993394620450714}
   m_Layer: 0
-  m_Name: MedvedkaNest3
+  m_Name: UpgradedMedvedkaNest3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -210,7 +237,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1490993395099977015}
   m_Layer: 0
-  m_Name: MedvedkaNest1
+  m_Name: UpgradedMedvedkaNest1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -240,7 +267,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1490993395363801069}
   m_Layer: 0
-  m_Name: MedvedkaNest2
+  m_Name: UpgradedMedvedkaNest2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

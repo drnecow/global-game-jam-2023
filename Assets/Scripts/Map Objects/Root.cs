@@ -5,6 +5,11 @@ using Project.Constants;
 
 public class Root : MapObject
 {
+    private bool _isDrilling;
+
+    public bool IsDrilling { get => _isDrilling; set => _isDrilling = value; }
+
+
     private void Awake()
     {
         _entityType = EntityType.Root;

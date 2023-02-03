@@ -60,7 +60,6 @@ public abstract class MapObject : MonoBehaviour
         Debug.Log($"Object at coordinates ({coords.x}, {coords.y}) doesn't belong to this MapObject");
         return null;
     }
-
     protected void DestroyObjectAt(Coords coords)
     {
         GameObject obj = GetObjectAt(coords);
@@ -80,6 +79,12 @@ public abstract class MapObject : MonoBehaviour
         }
     }
 
+    public virtual void DestroyThis()
+    {
+        Debug.Log($"Destroying {this} with its GameObject");
+        Destroy(gameObject);
+    }
+
     public List<Coords> GetAllCoords()
     {
         List<Coords> coords = new List<Coords>();
@@ -89,4 +94,6 @@ public abstract class MapObject : MonoBehaviour
 
         return coords;
     }
+
+    
 }

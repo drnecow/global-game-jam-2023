@@ -12,6 +12,6 @@ public class AstralSalvation : MapObject
 
     public override void RunRootInteractionProcess(params RootBlock[] rootBlocks)
     {
-        GameEventSystem.Instance.OnGameWin.Invoke();
+        GameEventSystem.Instance.OnWinGame.Invoke();
     }
 }

@@ -29,8 +29,10 @@ public struct Coords
 public class Map : MonoBehaviour
 {
     public static Map Instance { get; private set; } // Map is a Singleton
-    public int Width { get => _width; set => _width = value; }
-    public int Height { get => _height; set => _height = value; }
+    public int Width { get => _width; }
+    public int Height { get => _height; }
+    public MapObject[,] GridArray { get => _gridArray; }
+
 
     [SerializeField] private int _width;
     [SerializeField] private int _height;

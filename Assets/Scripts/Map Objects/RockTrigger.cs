@@ -21,7 +21,7 @@ public class RockTrigger : MapObject
         _relatedRock.gameObject.transform.position = Map.Instance.XYToWorldPos(_newRockCoords);
         Map.Instance.SetExistingObjectCoords(_relatedRock);
 
-        //Map.Instance.ClearExistingObjectCoords(_relatedMedvedkaNest);
+        Map.Instance.ClearExistingObjectCoords(_relatedMedvedkaNest);
         Destroy(_relatedMedvedkaNest);
     }
 
