@@ -105,6 +105,21 @@ public class Map : MonoBehaviour
             return false;
     }
 
+    public List<Coords> GetNeighbours(Coords coords, List<Vector2> displVectors)
+    {
+        List<Coords> neighbours = new List<Coords>();
+
+        foreach (Vector2 dir in displVectors)
+        {
+            Coords neighbourCoords = new Coords(coords.x + (int)dir.x, coords.y + (int)dir.y);
+
+            if (ValidateCoords(neighbourCoords))
+                neighbours.Add(neighbourCoords);
+        }
+
+        return neighbours;
+    } 
+
     [ContextMenu("Print Grid")]
     public void PrintGrid()
     {

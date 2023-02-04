@@ -21,21 +21,15 @@ public class MedvedkaNest : MapObject
             _turnsUntilNextSpawn--;
         else
         {
-            Debug.Log($"{this}: spawning new medvedka");
-
+            List<Coords> neighbours = Map.Instance.GetNeighbours(CurrentCoords, Constants.NEIGHBOURS_2X2);
             List<Coords> possibleSpawnCoords = new List<Coords>();
 
-            foreach (Vector2 dir in Constants.NEIGHBOURS_2X2)
+            foreach (Coords neighbour in neighbours)
             {
-                Coords neighbourCoords = new Coords(CurrentCoords.x + (int)dir.x, CurrentCoords.y + (int)dir.y);
+                MapObject obj = Map.Instance.GridArray[neighbour.x, neighbour.y];
 
-                if (Map.Instance.ValidateCoords(neighbourCoords))
-                {
-                    MapObject obj = Map.Instance.GridArray[neighbourCoords.x, neighbourCoords.y];
-
-                    if (obj == null)
-                        possibleSpawnCoords.Add(neighbourCoords);
-                }
+                if (obj == null)
+                    possibleSpawnCoords.Add(neighbour);
             }
 
             if (possibleSpawnCoords.Count > 0)
@@ -56,7 +50,6 @@ public class MedvedkaNest : MapObject
     public override void DestroyThis()
     {
         GameController.Instance.RemoveMedvedkaNest(this);
-        Debug.Log($"Destroying {this} with its GameObject");
-        Destroy(gameObject);
+        base.DestroyThis();
     }
 }

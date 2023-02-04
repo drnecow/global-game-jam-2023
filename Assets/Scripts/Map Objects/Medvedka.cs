@@ -6,6 +6,7 @@ using Project.Constants;
 public class Medvedka : MapObject
 {
     [SerializeField] private int _eatingTimer;
+    public int EatingTimer { get => _eatingTimer; }
 
 
     private void Awake()
@@ -15,46 +16,54 @@ public class Medvedka : MapObject
 
     public void MoveRandomly()
     {
-        List<Coords> possibleDirections = new List<Coords>();
+        List<Coords> neighbours = Map.Instance.GetNeighbours(CurrentCoords, Constants.NEIGHBOURS_1X1);
+        List<Coords> moveDirections = new List<Coords>();
 
-        foreach (Vector2 dir in Constants.NEIGHBOURS_1X1)
+        foreach (Coords neighbour in neighbours)
         {
-            Coords neighbourCoords = new Coords(CurrentCoords.x + (int)dir.x, CurrentCoords.y + (int)dir.y);
+            MapObject obj = Map.Instance.GridArray[neighbour.x, neighbour.y];
+            
+            if (obj == null)
+                moveDirections.Add(neighbour);
 
-            if (Map.Instance.ValidateCoords(neighbourCoords))
+            else if (obj.EntityType == EntityType.Root && obj)
             {
-                MapObject obj = Map.Instance.GridArray[neighbourCoords.x, neighbourCoords.y];
+                RootBlock objRootBlock = obj.GetObjectAt(neighbour).GetComponent<RootBlock>();
 
-                if (obj == null)
-                    possibleDirections.Add(neighbourCoords);
-                else if (obj.EntityType == EntityType.Root)
+                if (!objRootBlock.IsHardened && !objRootBlock.IsBeingEaten && !objRootBlock.IsBurning)
                 {
-                    EatRoot();
+                    EatRoot(objRootBlock);
                     return;
                 }
             }
         }
 
-        if (possibleDirections.Count > 0)
+        if (moveDirections.Count > 0)
         {
-            int randomDir = Random.Range(0, possibleDirections.Count);
+            int randomDir = Random.Range(0, moveDirections.Count);
 
             Map.Instance.FreeCoords(CurrentCoords);
 
-            transform.position = Map.Instance.XYToWorldPos(possibleDirections[randomDir]);
+            transform.position = Map.Instance.XYToWorldPos(moveDirections[randomDir]);
             Map.Instance.SetExistingObjectCoords(this);
         }
     }
 
-    private void EatRoot()
+    private void EatRoot(RootBlock root)
     {
         Debug.Log("Medvedka starts eating root");
+
+        Map.Instance.FreeCoords(CurrentCoords);
+        transform.position = root.transform.position;
+        GetComponent<Animator>().SetBool("Eating", true);
+
+        root.BeginBeingEaten(this);
+        GameController.Instance.AddEatingMedvedkaToRemove(this);
     }
 
     public override void DestroyThis()
     {
         GameController.Instance.RemoveMedvedka(this);
-        Debug.Log($"Destroying {this} with its GameObject");
-        Destroy(gameObject);
+        base.DestroyThis();
     }
 }

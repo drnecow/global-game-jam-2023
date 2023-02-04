@@ -11,6 +11,10 @@ public class FireTrigger : MapObject
     [SerializeField] private List<Coords> _trajectory1;
     [SerializeField] private List<Coords> _trajectory2;
 
+
+    [SerializeField] Sprite _activeSprite;
+
+
     private void Awake()
     {
         _entityType = EntityType.FireTrigger;
@@ -24,6 +28,8 @@ public class FireTrigger : MapObject
 
     public override void RunRootInteractionProcess(params RootBlock[] rootBlocks)
     {
+        GetComponent<SpriteRenderer>().sprite = _activeSprite;
+
         for (int i = 0; i < _relatedFires.Count; i++)
             _relatedFires[i].SetNewTrajectory(_newTrajectories[i]);
     }
@@ -31,6 +37,8 @@ public class FireTrigger : MapObject
     [ContextMenu("Trigger")]
     public void Trigger()
     {
+        GetComponent<SpriteRenderer>().sprite = _activeSprite;
+
         for (int i = 0; i < _relatedFires.Count; i++)
             _relatedFires[i].SetNewTrajectory(_newTrajectories[i]);
     }

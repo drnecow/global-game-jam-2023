@@ -5,20 +5,34 @@ using Project.Constants;
 
 public class Root : MapObject
 {
-    private bool _isDrilling;
-
-    public bool IsDrilling { get => _isDrilling; set => _isDrilling = value; }
-
-
     private void Awake()
     {
         _entityType = EntityType.Root;
     }
 
-    public void DestroyRootBlockAt(Coords coords)
-    {
-        DestroyObjectAt(coords);
 
-        // Check for detached roots and destroy them as well
+    public void MakeFireProof()
+    {
+        List<Coords> coords = GetAllCoords();
+
+        foreach (Coords coord in coords)
+        {
+            GameObject part = GetObjectAt(coord);
+            RootBlock rootBlock = part.GetComponent<RootBlock>();
+
+            rootBlock.IsFireProof = true;
+        }
+    }
+    public void MakeHardened()
+    {
+        List<Coords> coords = GetAllCoords();
+
+        foreach (Coords coord in coords)
+        {
+            GameObject part = GetObjectAt(coord);
+            RootBlock rootBlock = part.GetComponent<RootBlock>();
+
+            rootBlock.IsHardened = true;
+        }
     }
 }

@@ -12,6 +12,9 @@ public class Water : MapObject
 
     public override void RunRootInteractionProcess(params RootBlock[] rootBlocks)
     {
-        base.RunRootInteractionProcess(rootBlocks);
+        GameController.Instance.AddTurnTimer(3);
+
+        foreach (RootBlock rootBlock in rootBlocks)
+            rootBlock.IsImmersedInWater = true;
     }
 }

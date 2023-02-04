@@ -41,8 +41,6 @@ public class Fire : MapObject
                 _isMovingForward = true;
         }
 
-        Debug.Log($"Moving fire {this} to next cell");
-
         Map.Instance.ClearExistingObjectCoords(this);
 
         transform.position = Map.Instance.XYToWorldPos(_trajectoryPath[_currentPathCell]);

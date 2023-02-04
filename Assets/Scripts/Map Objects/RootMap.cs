@@ -27,26 +27,32 @@ public class RootMap : MonoBehaviour
         //Debug.Log($"Root map: width — {_roots.GetLength(0)}, height — {_roots.GetLength(1)}");
     }
 
-    public void AddRootBlock(RootBlock rootBlock)
+    public void AddRootBlock(Coords coords, RootBlock rootBlock)
     {
-        Coords blockCoords = Map.Instance.WorldPosToXY(rootBlock.gameObject.transform.position);
-
-        if (Map.Instance.ValidateCoords(blockCoords))
+        if (Map.Instance.ValidateCoords(coords))
         {
-            _roots[blockCoords.x, blockCoords.y] = rootBlock;
-            Debug.Log($"Root block {rootBlock} added at coordinates ({blockCoords.x}, {blockCoords.y})");
+            _roots[coords.x, coords.y] = rootBlock;
+            //Debug.Log($"Root block {rootBlock} added at coordinates ({coords.x}, {coords.y})");
         }
         else
-            Debug.Log($"Invalid coordinates given: ({blockCoords.x}, {blockCoords.y})");
+            Debug.Log($"Invalid coordinates given: ({coords.x}, {coords.y})");
     }
-    
+    public void RemoveRootBlockAt(Coords coords)
+    {
+        if (Map.Instance.ValidateCoords(coords))
+        {
+            _roots[coords.x, coords.y] = null;
+            Debug.Log($"Root block removed from coordinates ({coords.x}, {coords.y})");
+        }
+    }
+
     public bool IsEmpty(List<Coords> coords)
     {
-        foreach (Coords coord in coords)
+        if (coords.Count > 0)
         {
-            if (Map.Instance.ValidateCoords(coord))
+            foreach (Coords coord in coords)
             {
-                if (_roots[coord.x, coord.y] != null)
+                if (Map.Instance.ValidateCoords(coord) && _roots[coord.x, coord.y] != null)
                     return false;
             }
 
@@ -54,5 +60,27 @@ public class RootMap : MonoBehaviour
         }
 
         return true;
+    }
+    public List<Coords> GetEmpty(List<Coords> coords)
+    {
+        List<Coords> emptyCoords = new List<Coords>();
+
+        foreach (Coords coord in coords)
+            if (Map.Instance.ValidateCoords(coord))
+                if (_roots[coord.x, coord.y] == null)
+                    emptyCoords.Add(coord);
+
+        return emptyCoords;
+    }
+    public List<Coords> GetNonEmpty(List<Coords> coords)
+    {
+        List<Coords> nonEmptyCoords = new List<Coords>();
+
+        foreach (Coords coord in coords)
+            if (Map.Instance.ValidateCoords(coord))
+                if (_roots[coord.x, coord.y] != null)
+                    nonEmptyCoords.Add(coord);
+
+        return nonEmptyCoords;
     }
 }

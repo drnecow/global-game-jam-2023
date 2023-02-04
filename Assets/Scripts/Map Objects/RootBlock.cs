@@ -12,7 +12,6 @@ public class RootBlock : MonoBehaviour
     private bool _isHardened = false;
 
     private bool _isBurning = false;
-    //private FireSource _fireSource = null;
 
     private bool _isBeingEaten = false;
     private Medvedka _eater = null;
@@ -24,6 +23,7 @@ public class RootBlock : MonoBehaviour
     public bool IsBurning { get => _isBurning; set => _isBurning = value; }
     public bool IsBeingEaten { get => _isBeingEaten; set => _isBeingEaten = value; }
     public Medvedka Eater { get => _eater; set => _eater = value; }
+    public Root ParentRoot { get => _parentRoot; }
 
     public void SetOnFire()
     {
@@ -33,11 +33,20 @@ public class RootBlock : MonoBehaviour
             SetLifeTimer(4);
 
         if (_isBeingEaten) {
-            Destroy(_eater);
+            _eater.DestroyThis();
             _isBeingEaten = false;
         }
 
         Debug.Log($"{this} set on fire");
+    }
+    public void BeginBeingEaten(Medvedka eater)
+    {
+        _isBeingEaten = true;
+        _eater = eater;
+
+        SetLifeTimer(eater.EatingTimer);
+
+        Debug.Log($"{this} began being eaten by {eater}");
     }
     private void SetLifeTimer(int newValue)
     {
@@ -50,13 +59,23 @@ public class RootBlock : MonoBehaviour
     public void DecrementLifeTimer()
     {
         _lifeTimer--;
-        GameEventSystem.Instance.OnRootLifeTimerChanged.Invoke(this, _lifeTimer);
-        Debug.Log($"Life timer of {this} set to {_lifeTimer}");
-
+       
         if (_lifeTimer == 0)
         {
-            Debug.Log($"Life timer of {this} reached 0, destroying this");
-            _parentRoot.DestroyRootBlockAt(Map.Instance.WorldPosToXY(transform.position));
+            Debug.Log($"Life timer of {this} reached 0, it will be destroyed this turn");
+            GameController.Instance.AddTimedOutRootBlock(this);
+
+            if (_eater != null)
+            {
+                GameController.Instance.AddMedvedka(_eater);
+                Map.Instance.SetExistingObjectCoords(_eater);
+                _eater.GetComponent<Animator>().SetBool("Eating", false);
+            }
+        }
+        else
+        {
+            GameEventSystem.Instance.OnRootLifeTimerChanged.Invoke(this, _lifeTimer);
+            Debug.Log($"Life timer of {this} set to {_lifeTimer}");
         }
     }
 }

@@ -10,6 +10,10 @@ public class RockTrigger : MapObject
 
     [SerializeField] private MedvedkaNest _relatedMedvedkaNest;
 
+
+    [SerializeField] Sprite _activeSprite;
+
+
     private void Awake()
     {
         _entityType = EntityType.RockTrigger;
@@ -17,22 +21,13 @@ public class RockTrigger : MapObject
 
     public override void RunRootInteractionProcess(params RootBlock[] rootBlocks)
     {
+        GetComponent<SpriteRenderer>().sprite = _activeSprite;
+
         Map.Instance.ClearExistingObjectCoords(_relatedRock);
         _relatedRock.gameObject.transform.position = Map.Instance.XYToWorldPos(_newRockCoords);
         Map.Instance.SetExistingObjectCoords(_relatedRock);
 
         Map.Instance.ClearExistingObjectCoords(_relatedMedvedkaNest);
-        Destroy(_relatedMedvedkaNest);
-    }
-
-    [ContextMenu("Smash Medvedka Nest")]
-    public void RunRootInteractionProcess()
-    {
-        Map.Instance.ClearExistingObjectCoords(_relatedRock);
-        _relatedRock.gameObject.transform.position = Map.Instance.XYToWorldPos(_newRockCoords);
-        Map.Instance.SetExistingObjectCoords(_relatedRock);
-
-        Map.Instance.ClearExistingObjectCoords(_relatedMedvedkaNest);
-        Destroy(_relatedMedvedkaNest.gameObject);
+        _relatedMedvedkaNest.DestroyThis();
     }
 }

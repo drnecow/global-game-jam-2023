@@ -14,8 +14,9 @@ public class GameEventSystem : MonoBehaviour
     public UnityEvent<int> OnTurnTimerValueChanged;
     public UnityEvent<RootBlock, int> OnRootLifeTimerSet;
     public UnityEvent<RootBlock, int> OnRootLifeTimerChanged;
+    public UnityEvent<RootBlock> OnRootLifeTimerExpired;
 
-    public UnityEvent<Coords> OnRootBlockDestroyed;
+    public UnityEvent<RootBlock> OnRootBlockDestroyed;
 
     public UnityEvent OnWinGame;
     public UnityEvent OnLoseGame;

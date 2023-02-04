@@ -10,6 +10,8 @@ public class Highlight : MonoBehaviour
     private SpriteRenderer[,] _spriteRenderers;
     [SerializeField] private GameObject _squarePrefab;
 
+    private float _alpha = 0.2f;
+
 
     private void Awake()
     {
@@ -29,8 +31,6 @@ public class Highlight : MonoBehaviour
         _spriteRenderers = new SpriteRenderer[Map.Instance.Width, Map.Instance.Height];
 
         SetupSquares();
-        MarkAllowed(new List<Coords>{ new Coords(1, 2) });
-        ClearHighlight();
     }
 
     private void SetupSquares()
@@ -58,7 +58,7 @@ public class Highlight : MonoBehaviour
                 color.r = 255f;
                 color.g = 0f;
                 color.b = 0f;
-                color.a = 0.8f;
+                color.a = _alpha;
 
                 _spriteRenderers[coord.x, coord.y].color = color;
             }
@@ -73,7 +73,7 @@ public class Highlight : MonoBehaviour
             color.r = 255f;
             color.g = 0f;
             color.b = 0f;
-            color.a = 0.8f;
+            color.a = _alpha;
 
             _spriteRenderers[coords.x, coords.y].color = color;
         }
@@ -89,7 +89,7 @@ public class Highlight : MonoBehaviour
                 color.r = 0f;
                 color.g = 255f;
                 color.b = 0f;
-                color.a = 0.8f;
+                color.a = _alpha;
 
                 _spriteRenderers[coord.x, coord.y].color = color;
             }
@@ -104,7 +104,7 @@ public class Highlight : MonoBehaviour
             color.r = 0f;
             color.g = 255f;
             color.b = 0f;
-            color.a = 0.8f;
+            color.a = _alpha;
 
             _spriteRenderers[coords.x, coords.y].color = color;
         }

@@ -33,9 +33,6 @@ public abstract class MapObject : MonoBehaviour
 
         int rotation = (int)transform.eulerAngles.z;
 
-
-        Debug.Log($"Rotation: {rotation}");
-
         // Transform the displacement vector based on the rotation
         if (rotation != 0 && rotation != 90 && rotation != 180 && rotation != 270)
         {
@@ -52,15 +49,12 @@ public abstract class MapObject : MonoBehaviour
         // Find object corresponding to the displacement vector
         for (int i = 0; i < _cellDisplacements.Count; i++)
             if (_cellDisplacements[i] == displVector)
-            {
-                Debug.Log($"Displacement of object at coordinates ({coords.x}, {coords.y}) is {displVector}");
                 return _cells[i];
-            }
 
         Debug.Log($"Object at coordinates ({coords.x}, {coords.y}) doesn't belong to this MapObject");
         return null;
     }
-    protected void DestroyObjectAt(Coords coords)
+    public virtual void DestroyObjectAt(Coords coords)
     {
         GameObject obj = GetObjectAt(coords);
         

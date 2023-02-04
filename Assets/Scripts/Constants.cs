@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,9 +8,16 @@ namespace Project.Constants
     public class Constants
     {
         public const float MAP_CELL_SIZE = 10f;
+        public static readonly List<Coords> ORIGIN_POINTS = new List<Coords>() { new Coords(1, 6), new Coords(1, 7), new Coords(1, 8) };
 
-        public static readonly Vector2[] NEIGHBOURS_1X1 = { new Vector2(0, -1), new Vector2(-1, 0), new Vector2(1, 0), new Vector2(0, 1) };
-        public static readonly Vector2[] NEIGHBOURS_2X2 =
+        public static readonly List<Vector2> NEIGHBOURS_1X1 = new List<Vector2>() { new Vector2(0, -1), new Vector2(-1, 0), new Vector2(1, 0), new Vector2(0, 1) };
+        public static readonly List<Vector2> NEIGHBOURS_1X1_DIAGONAL = new List<Vector2>()
+        {
+            new Vector2(-1, -1), new Vector2(0, -1), new Vector2(1, -1),
+            new Vector2(-1, 0), new Vector2(1, 0),
+            new Vector2(-1, 1), new Vector2(0, 1), new Vector2(1, 1)
+        };
+        public static readonly List<Vector2> NEIGHBOURS_2X2 = new List<Vector2>()
         {
             new Vector2(0, -1),
             new Vector2(1, -1),
@@ -26,9 +34,20 @@ namespace Project.Constants
         public static readonly List<EntityType> INTERACTABLE_MULTIPLE = new List<EntityType> { EntityType.Fire, EntityType.Water };
         public static readonly List<EntityType> DESTRUCTIBLE = new List<EntityType> { EntityType.Rock, EntityType.Medvedka, EntityType.MedvedkaNest };
 
-        public static readonly EntityType[] PERISHABLE_BY_FIRE = { EntityType.Rock, EntityType.WatchTower,
+        public static readonly List<EntityType> PERISHABLE_BY_FIRE = new List<EntityType>() { EntityType.Rock, EntityType.WatchTower,
             EntityType.InterestPlace, EntityType.Medvedka, EntityType.MedvedkaNest };
-    }
+
+
+        public static readonly Dictionary<CardType, Action> CARD_ACTIONS = new Dictionary<CardType, Action>()
+        {
+            [CardType.PlaceSingle] = () => RootBuilder.Instance.PlaceRoot(RootType.Single),
+            [CardType.PlaceLine] = () => RootBuilder.Instance.PlaceRoot(RootType.Line),
+            [CardType.PlaceZigzag] = () => RootBuilder.Instance.PlaceRoot(RootType.Zigzag),
+            [CardType.PlaceOutgrowthLine] = () => RootBuilder.Instance.PlaceRoot(RootType.OutgrowthLine),
+            [CardType.PlaceCorner] = () => RootBuilder.Instance.PlaceRoot(RootType.Corner),
+            [CardType.PlaceCross] = () => RootBuilder.Instance.PlaceRoot(RootType.Cross)
+        };
+}
 
     public enum EntityType
     {
@@ -53,5 +72,20 @@ namespace Project.Constants
         OutgrowthLine = 4,
         Corner = 5,
         Cross = 6
+    }
+    public enum CardType
+    {
+        PlaceSingle = 1,
+        PlaceLine = 2,
+        PlaceZigzag = 3,
+        PlaceOutgrowthLine = 4,
+        PlaceCorner = 5,
+        PlaceCross = 6,
+
+        Poison = 7,
+
+        MakeFireProof = 8,
+        MakeHardened = 9,
+        MakeDrill = 10
     }
 }

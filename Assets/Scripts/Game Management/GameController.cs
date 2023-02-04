@@ -14,6 +14,9 @@ public class GameController : MonoBehaviour
     private List<FireSource> _fireSources;
     private List<RootBlock> _timeredRootBlocks;
 
+    private List<Medvedka> _eatingMedvedkasToRemove;
+    private List<RootBlock> _timedOutRootBlocks;
+
 
     private void Awake()
     {
@@ -29,7 +32,10 @@ public class GameController : MonoBehaviour
         _medvedkasOnMap = new List<Medvedka>();
         _fireSources = new List<FireSource>();
         _timeredRootBlocks = new List<RootBlock>();
-}
+
+        _timedOutRootBlocks = new List<RootBlock>();
+        _eatingMedvedkasToRemove = new List<Medvedka>();
+    }
 
     void Start()
     {
@@ -42,16 +48,18 @@ public class GameController : MonoBehaviour
         if (!DecrementTurnTimer())
             return;
 
+        DecrementRootLifeTimers();
+        DestroyTimedOutRoots();
+
         SpawnMedvedkas();
         MoveMedvedkas();
+        RemoveEatingMedvedkas();
         MoveFire();
         SpreadFireSource();
 
         // Wait until user finishes turn; once it's finished, OnPlayerTurnPassed is invoked 
 
-        DecrementRootLifeTimers();
-
-        Map.Instance.PrintGrid();
+        //Map.Instance.PrintGrid();
         GameEventSystem.Instance.OnEndTurn.Invoke();
     }
 
@@ -75,6 +83,12 @@ public class GameController : MonoBehaviour
     {
         _turnTimer += bonus;
         GameEventSystem.Instance.OnTurnTimerValueChanged.Invoke(_turnTimer);
+    }
+
+    public void AddTimedOutRootBlock(RootBlock rootBlock)
+    {
+        if (!_timedOutRootBlocks.Contains(rootBlock))
+            _timedOutRootBlocks.Add(rootBlock);
     }
 
     public void AddFireSource(FireSource fireSource)
@@ -106,11 +120,41 @@ public class GameController : MonoBehaviour
         if (!_medvedkasOnMap.Contains(medvedka))
         {
             _medvedkasOnMap.Add(medvedka);
-            Debug.Log($"Added medvedka {medvedka}");
         }
         else
         {
             Debug.Log($"Medvedka {medvedka} is already added");
+        }
+    }
+    public void AddEatingMedvedkaToRemove(Medvedka medvedka)
+    {
+        if (!_eatingMedvedkasToRemove.Contains(medvedka))
+            _eatingMedvedkasToRemove.Add(medvedka);
+    }
+
+    public void RemoveFireSource(FireSource fireSource)
+    {
+        if (_fireSources.Contains(fireSource))
+        {
+            Debug.Log($"Removing fire source {fireSource}");
+            _fireSources.Remove(fireSource);
+            //Destroy(fireSource);
+        }
+        else
+        {
+            Debug.Log($"Fire source {fireSource} doesn't exist in the game");
+        }
+    }
+    public void RemoveTimeredRootBlock(RootBlock rootBlock)
+    {
+        if (_timeredRootBlocks.Contains(rootBlock))
+        {
+            _timeredRootBlocks.Remove(rootBlock);
+            Debug.Log($"Removed root block {rootBlock}");
+        }
+        else
+        {
+            Debug.Log($"Root block {rootBlock} is not in the game");
         }
     }
     public void RemoveMedvedka(Medvedka medvedka)
@@ -151,11 +195,38 @@ public class GameController : MonoBehaviour
     }
     private void SpreadFireSource()
     {
-
+        foreach (FireSource fireSource in _fireSources)
+            fireSource.Spread();
     }
     private void DecrementRootLifeTimers()
     {
         foreach (RootBlock rootBlock in _timeredRootBlocks)
             rootBlock.DecrementLifeTimer();
+    }
+
+    private void DestroyTimedOutRoots()
+    {
+        foreach (RootBlock root in _timedOutRootBlocks)
+        {
+            GameEventSystem.Instance.OnRootLifeTimerExpired.Invoke(root);
+            GameEventSystem.Instance.OnRootBlockDestroyed.Invoke(root);
+            _timeredRootBlocks.Remove(root);
+
+            Coords rootCoords = Map.Instance.WorldPosToXY(root.transform.position);
+
+            root.ParentRoot.DestroyObjectAt(rootCoords);
+            RootMap.Instance.RemoveRootBlockAt(rootCoords);
+        }
+
+        _timedOutRootBlocks.Clear();
+
+        // Check for detached roots and destroy them as well
+    }
+    private void RemoveEatingMedvedkas()
+    {
+        foreach (Medvedka medvedka in _eatingMedvedkasToRemove)
+            RemoveMedvedka(medvedka);
+
+        _eatingMedvedkasToRemove.Clear();
     }
 }
