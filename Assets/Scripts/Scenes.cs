@@ -8,6 +8,8 @@ public class Scenes : MonoBehaviour
 {
     public static Scenes Instance { get; private set; }
 
+    private bool _cutsceneWatched;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -27,7 +29,13 @@ public class Scenes : MonoBehaviour
     public void Cutscene()
     {
         DontDestroyOnLoad(this);
-        UnityEngine.SceneManagement.SceneManager.LoadScene(1);
+
+        if (!_cutsceneWatched) {
+            UnityEngine.SceneManagement.SceneManager.LoadScene(1);
+            _cutsceneWatched = true;
+        }
+        else
+            UnityEngine.SceneManagement.SceneManager.LoadScene(2);
     }
     public void MainMenu()
     {
