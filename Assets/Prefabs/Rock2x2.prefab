@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3314248214471550839}
   - component: {fileID: 7831622732148200419}
-  - component: {fileID: 5285814932227646958}
   m_Layer: 0
   m_Name: Sprite
   m_TagString: Untagged
@@ -83,25 +82,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!95 &5285814932227646958
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3918796044716500434}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 16e8b98b7ee506246aeb0a9f5ca4ea0a, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &8158080329328893760
 GameObject:
   m_ObjectHideFlags: 0
@@ -112,6 +92,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8158080329328893767}
   - component: {fileID: 8158080329328893766}
+  - component: {fileID: 4369242270327926438}
   m_Layer: 0
   m_Name: Rock4
   m_TagString: Untagged
@@ -184,6 +165,25 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &4369242270327926438
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8158080329328893760}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &8158080329524622309
 GameObject:
   m_ObjectHideFlags: 0
@@ -194,6 +194,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8158080329524622308}
   - component: {fileID: 8158080329524622299}
+  - component: {fileID: 7484307001502363164}
   m_Layer: 0
   m_Name: Rock3
   m_TagString: Untagged
@@ -266,6 +267,25 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &7484307001502363164
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8158080329524622309}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &8158080329569802363
 GameObject:
   m_ObjectHideFlags: 0
@@ -276,6 +296,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8158080329569802362}
   - component: {fileID: 8158080329569802361}
+  - component: {fileID: 1826885676971631949}
   m_Layer: 0
   m_Name: Rock2
   m_TagString: Untagged
@@ -348,6 +369,25 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &1826885676971631949
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8158080329569802363}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &8158080329810633800
 GameObject:
   m_ObjectHideFlags: 0
@@ -358,6 +398,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8158080329810633807}
   - component: {fileID: 8158080329810633806}
+  - component: {fileID: 7395357363623068500}
   m_Layer: 0
   m_Name: Rock1
   m_TagString: Untagged
@@ -430,6 +471,25 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &7395357363623068500
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8158080329810633800}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &8158080330626434423
 GameObject:
   m_ObjectHideFlags: 0
@@ -488,3 +548,5 @@ MonoBehaviour:
   - {x: 1, y: 0}
   - {x: 0, y: 1}
   - {x: 1, y: 1}
+  _root1X1Sprite: {fileID: 21300000, guid: cbaa61600a258d84482111d76e91232e, type: 3}
+  _root1X1Animation: {fileID: 9100000, guid: 0a04c447e05209e44b991787d9f575e5, type: 2}

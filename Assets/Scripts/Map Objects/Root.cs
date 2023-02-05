@@ -5,6 +5,10 @@ using Project.Constants;
 
 public class Root : MapObject
 {
+    [SerializeField] private Sprite _fireProof;
+    [SerializeField] private Sprite _hardened;
+
+
     private void Awake()
     {
         _entityType = EntityType.Root;
@@ -19,6 +23,7 @@ public class Root : MapObject
         {
             GameObject part = GetObjectAt(coord);
             RootBlock rootBlock = part.GetComponent<RootBlock>();
+            part.GetComponent<SpriteRenderer>().sprite = _fireProof;
 
             rootBlock.IsFireProof = true;
         }
@@ -31,6 +36,7 @@ public class Root : MapObject
         {
             GameObject part = GetObjectAt(coord);
             RootBlock rootBlock = part.GetComponent<RootBlock>();
+            part.GetComponent<SpriteRenderer>().sprite = _hardened;
 
             rootBlock.IsHardened = true;
         }

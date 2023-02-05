@@ -5,6 +5,7 @@ using UnityEngine;
 public class GameController : MonoBehaviour
 {
     public static GameController Instance { get; private set; } // GameController is a Singleton
+    public bool RootBeingPlaced { get => _rootBeingPlaced; set => _rootBeingPlaced = value; }
 
     private int _turnTimer = 25;
 
@@ -16,6 +17,10 @@ public class GameController : MonoBehaviour
 
     private List<Medvedka> _eatingMedvedkasToRemove;
     private List<RootBlock> _timedOutRootBlocks;
+
+    private bool _rootBeingPlaced = false;
+
+    private bool _playerInputPassed = false;
 
 
     private void Awake()
@@ -39,12 +44,24 @@ public class GameController : MonoBehaviour
 
     void Start()
     {
+        GameEventSystem.Instance.OnPlayerTurnPassed.AddListener(() => _playerInputPassed = true);
+        GameEventSystem.Instance.OnEndTurn.AddListener(() => ResolveTurn());
+
         MapSetup.Instance.PopulateMap();
+        CardSystem.Instance.StartGame();
+        ResolveTurn();
     }
 
     [ContextMenu("Resolve Turn")]
     public void ResolveTurn()
     {
+        StartCoroutine(HandleTurn());   
+    }
+
+    private void ResolvePreInputActions()
+    {
+        CardSystem.Instance.NewTurn();
+
         if (!DecrementTurnTimer())
             return;
 
@@ -56,14 +73,24 @@ public class GameController : MonoBehaviour
         RemoveEatingMedvedkas();
         MoveFire();
         SpreadFireSource();
-
-        // Wait until user finishes turn; once it's finished, OnPlayerTurnPassed is invoked 
-
-        //Map.Instance.PrintGrid();
+    }
+    private void ResolvePostInputActions()
+    {
+        CardSystem.Instance.EndTurn();
         GameEventSystem.Instance.OnEndTurn.Invoke();
     }
+    private IEnumerator HandleTurn()
+    {
+        ResolvePreInputActions();
 
-    private bool DecrementTurnTimer()
+        while (!_playerInputPassed)
+            yield return null;
+
+        _playerInputPassed = false;
+        ResolvePostInputActions();
+    }
+
+    public bool DecrementTurnTimer()
     {
         if (_turnTimer > 0)
         {

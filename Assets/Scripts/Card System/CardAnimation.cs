@@ -3,32 +3,32 @@ using System.Collections;
 
 public class CardAnimation : MonoBehaviour
 {
-    [SerializeField] private RectTransform deckPile;
-    [SerializeField] private RectTransform discardPile;
-    [SerializeField] private RectTransform handSpace;
-    [SerializeField] private float animationDuration = 0.5f;
+    [SerializeField] private Vector2 _deckPilePosition;
+    [SerializeField] private Vector2 _discardPilePosition;
+    [SerializeField] private Vector2 _handSpacePosition;
+    [SerializeField] private Vector2 _screenCenter;
 
-    private Vector2 deckPileStart;
-    private Vector2 handSpaceEnd;
-    private Vector2 discardPileEnd;
+    [SerializeField] private float _animationDuration;
 
-    private void Start()
+    private RectTransform _rectTransform;
+
+
+    private void Awake()
     {
-        deckPileStart = deckPile.anchoredPosition;
-        handSpaceEnd = handSpace.anchoredPosition + new Vector2(handSpace.rect.width / 2, 0);
-        discardPileEnd = discardPile.anchoredPosition;
+        _rectTransform = GetComponent<RectTransform>();
     }
 
-    [ContextMenu("Draw")]
-    public void DrawCard()
+    public IEnumerator DrawCard()
     {
-        StartCoroutine(MoveCard(deckPileStart, handSpaceEnd));
+        yield return StartCoroutine(MoveCard(_deckPilePosition, _handSpacePosition));
     }
-
-    [ContextMenu("Discard")]
-    public void DiscardCard()
+    public IEnumerator DiscardCard()
     {
-        StartCoroutine(MoveCard(handSpaceEnd, discardPileEnd));
+        yield return StartCoroutine(MoveCard(_handSpacePosition, _discardPilePosition));
+    }
+    public IEnumerator AddToHand()
+    {
+        yield return StartCoroutine(MoveCard(_screenCenter, _handSpacePosition));
     }
 
     private IEnumerator MoveCard(Vector2 startPos, Vector2 endPos)
@@ -37,11 +37,11 @@ public class CardAnimation : MonoBehaviour
 
         while (progress <= 1)
         {
-            (transform as RectTransform).anchoredPosition = Vector2.Lerp(startPos, endPos, progress);
-            progress += Time.deltaTime / animationDuration;
+            _rectTransform.anchoredPosition = Vector2.Lerp(startPos, endPos, progress);
+            progress += Time.deltaTime / _animationDuration;
             yield return null;
         }
 
-        (transform as RectTransform).anchoredPosition = endPos;
+        _rectTransform.anchoredPosition = endPos;
     }
 }

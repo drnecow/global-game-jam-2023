@@ -83,4 +83,13 @@ public class RootMap : MonoBehaviour
 
         return nonEmptyCoords;
     }
+
+    public void DestroyAllEatingMedvedkas()
+    {
+        for (int i = 0; i < _roots.GetLength(0); i++)
+            for (int j = 0; j < _roots.GetLength(1); j++)
+                if (_roots[i, j] != null)
+                    if (_roots[i, j].Eater != null)
+                        _roots[i, j].Eater.DestroyThis();
+    }
 }

@@ -1,12 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using Project.Constants;
 using CodeMonkey.Utils;
 
 public class RootBuilder : MonoBehaviour
 {
     public static RootBuilder Instance { get; private set; }
+    public bool FireProof { get => _fireProof; set => _fireProof = value; }
+    public bool Hardened { get => _hardened; set => _hardened = value; }
+    public bool Drilling { get => _drilling; set => _drilling = value; }
 
     [SerializeField] private GameObject _singleRoot;
     [SerializeField] private GameObject _lineRoot;
@@ -18,9 +22,9 @@ public class RootBuilder : MonoBehaviour
     private Vector3 _mousePos;
     private bool _placementFinished = true;
 
-    private bool _fireProof;
-    private bool _hardened;
-    private bool _drilling;
+    private bool _fireProof = false;
+    private bool _hardened = false;
+    private bool _drilling = false;
 
     [SerializeField] private RootType _rootTypeToPlace;
 
@@ -46,6 +50,8 @@ public class RootBuilder : MonoBehaviour
     }
     public IEnumerator HandleRootPlacement(RootType rootType)
     {
+        GameController.Instance.RootBeingPlaced = true;
+
         GameObject rootPrefab = rootType switch
         {
             RootType.Single => _singleRoot,
@@ -164,7 +170,7 @@ public class RootBuilder : MonoBehaviour
                 root.transform.position = Map.Instance.XYToWorldPos(mouseCoords);
                 List<Coords> rootCoords = root.GetAllCoords();
 
-                if (CanPlace(root))
+                if (CanPlace(root) || !EventSystem.current.IsPointerOverGameObject())
                 {
                     if (!RootMap.Instance.IsEmpty(rootCoords))
                     {
@@ -190,6 +196,7 @@ public class RootBuilder : MonoBehaviour
                     Highlight.Instance.ClearHighlight();
 
                     _placementFinished = true;
+                    GameController.Instance.RootBeingPlaced = true;
                 }
             }
             else

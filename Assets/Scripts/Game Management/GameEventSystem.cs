@@ -8,6 +8,7 @@ public class GameEventSystem : MonoBehaviour
 {
     public static GameEventSystem Instance { get; private set; } // GameEventSystem is a Singleton
 
+    public UnityEvent OnBeginTurn;
     public UnityEvent OnPlayerTurnPassed;
     public UnityEvent OnEndTurn;
 

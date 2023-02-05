@@ -3,28 +3,60 @@ using System.Collections.Generic;
 using UnityEngine;
 using Project.Constants;
 
-public class CardPile : MonoBehaviour
+public class CardPile
 {
     List<CardType> _cards;
+    public int Size { get { return _cards.Count; } }
+    public List<CardType> Cards { get => _cards; }
 
 
-    private void Awake()
+    public CardPile()
     {
         _cards = new List<CardType>();
     }
 
-    private void Shuffle()
+    public void Shuffle()
     {
+        int n = _cards.Count;
 
+        while (n > 1)
+        {
+            n--;
+
+            int randomIndex = Random.Range(0, n + 1);
+
+            CardType card = _cards[randomIndex];
+            _cards[randomIndex] = _cards[n];
+            _cards[n] = card;
+        }
+    }
+    public void AddCard(CardType card)
+    {
+        _cards.Add(card);
+    }
+    public void ReplaceCardsWith(List<CardType> newCards)
+    {
+        if (newCards != null)
+            _cards = newCards;
     }
     public List<CardType> Draw(int cardNumber)
     {
         List<CardType> drawnCards = new List<CardType>();
 
-        for (int i = 0; i < Mathf.Min(cardNumber, _cards.Count + 1); i++)
+        if (cardNumber < _cards.Count)
         {
-            drawnCards.Add(_cards[_cards.Count - 1]);
-            _cards.RemoveAt(_cards.Count - 1);
+            for (int i = 0; i < cardNumber; i++)
+            {
+                drawnCards.Add(_cards[_cards.Count - 1]);
+                _cards.RemoveAt(_cards.Count - 1);
+            }
+        }
+        else
+        {
+            foreach (CardType card in _cards)
+                drawnCards.Add(card);
+
+            _cards.Clear();
         }
 
         return drawnCards;

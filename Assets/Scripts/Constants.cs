@@ -45,7 +45,15 @@ namespace Project.Constants
             [CardType.PlaceZigzag] = () => RootBuilder.Instance.PlaceRoot(RootType.Zigzag),
             [CardType.PlaceOutgrowthLine] = () => RootBuilder.Instance.PlaceRoot(RootType.OutgrowthLine),
             [CardType.PlaceCorner] = () => RootBuilder.Instance.PlaceRoot(RootType.Corner),
-            [CardType.PlaceCross] = () => RootBuilder.Instance.PlaceRoot(RootType.Cross)
+            [CardType.PlaceCross] = () => RootBuilder.Instance.PlaceRoot(RootType.Cross),
+
+            [CardType.Poison] = () => RootMap.Instance.DestroyAllEatingMedvedkas(),
+
+            [CardType.MakeFireProof] = () => RootBuilder.Instance.FireProof = true,
+            [CardType.MakeHardened] = () => RootBuilder.Instance.Hardened = true,
+            [CardType.MakeDrill] = () => RootBuilder.Instance.Drilling = true,
+
+            [CardType.AddFiveSingles] = () => CardSystem.Instance.AddToHand(new List<CardType>() { CardType.PlaceSingle, CardType.PlaceSingle, CardType.PlaceSingle, CardType.PlaceSingle, CardType.PlaceSingle } )
         };
 }
 
@@ -86,6 +94,8 @@ namespace Project.Constants
 
         MakeFireProof = 8,
         MakeHardened = 9,
-        MakeDrill = 10
+        MakeDrill = 10,
+
+        AddFiveSingles = 11
     }
 }
