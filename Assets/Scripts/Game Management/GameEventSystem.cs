@@ -16,6 +16,7 @@ public class GameEventSystem : MonoBehaviour
     public UnityEvent<RootBlock, int> OnRootLifeTimerSet;
     public UnityEvent<RootBlock, int> OnRootLifeTimerChanged;
     public UnityEvent<RootBlock> OnRootLifeTimerExpired;
+    public UnityEvent<RootBlock> OnRootLifeTimerStopped;
 
     public UnityEvent<RootBlock> OnRootBlockDestroyed;
 

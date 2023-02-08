@@ -41,4 +41,32 @@ public class Root : MapObject
             rootBlock.IsHardened = true;
         }
     }
+
+    public override void DestroyObjectAt(Coords coords)
+    {
+        GameObject obj = GetObjectAt(coords);
+
+        if (obj != null)
+        {
+            RootBlock rootBlock = obj.GetComponent<RootBlock>();
+
+            if (rootBlock.Eater != null)
+            {
+                GameController.Instance.AddMedvedka(rootBlock.Eater);
+                Map.Instance.SetExistingObjectCoords(rootBlock.Eater);
+                rootBlock.Eater.GetComponent<Animator>().SetBool("Eating", false);
+            }
+
+            int objIndex = _cells.IndexOf(obj);
+
+            _cells.RemoveAt(objIndex);
+            _cellDisplacements.RemoveAt(objIndex);
+            Destroy(obj);
+            Map.Instance.FreeCoords(coords);
+
+            // If MapObject doesn't have any contents, it is no longer needed
+            if (_cells.Count == 0 && _cellDisplacements.Count == 0)
+                Destroy(this);
+        }
+    }
 }

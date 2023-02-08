@@ -23,11 +23,13 @@ public class RockTrigger : MapObject
     {
         GetComponent<SpriteRenderer>().sprite = _activeSprite;
 
-        Map.Instance.ClearExistingObjectCoords(_relatedRock);
-        _relatedRock.gameObject.transform.position = Map.Instance.XYToWorldPos(_newRockCoords);
-        Map.Instance.SetExistingObjectCoords(_relatedRock);
-
         Map.Instance.ClearExistingObjectCoords(_relatedMedvedkaNest);
         _relatedMedvedkaNest.DestroyThis();
+
+        Map.Instance.ClearExistingObjectCoords(_relatedRock);
+        CoroutineAnimation.Instance.MoveTo(_relatedRock.gameObject, Map.Instance.XYToWorldPos(_newRockCoords));
+        //_relatedRock.gameObject.transform.position = Map.Instance.XYToWorldPos(_newRockCoords);
+        //Map.Instance.SetExistingObjectCoords(_relatedRock);
+        Map.Instance.SetOccupied(_newRockCoords, _relatedRock);
     }
 }

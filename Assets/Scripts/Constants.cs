@@ -47,7 +47,7 @@ namespace Project.Constants
             [CardType.PlaceCorner] = () => RootBuilder.Instance.PlaceRoot(RootType.Corner),
             [CardType.PlaceCross] = () => RootBuilder.Instance.PlaceRoot(RootType.Cross),
 
-            [CardType.Poison] = () => RootMap.Instance.DestroyAllEatingMedvedkas(),
+            [CardType.Poison] = () => RootMap.Instance.PoisonAllEatingMedvedkas(),
 
             [CardType.MakeFireProof] = () => RootBuilder.Instance.FireProof = true,
             [CardType.MakeHardened] = () => RootBuilder.Instance.Hardened = true,

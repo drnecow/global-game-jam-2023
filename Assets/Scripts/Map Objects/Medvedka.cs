@@ -44,8 +44,10 @@ public class Medvedka : MapObject
 
             Map.Instance.FreeCoords(CurrentCoords);
 
-            transform.position = Map.Instance.XYToWorldPos(moveDirections[randomDir]);
-            Map.Instance.SetExistingObjectCoords(this);
+            CoroutineAnimation.Instance.MoveTo(gameObject, Map.Instance.XYToWorldPos(moveDirections[randomDir]));
+            //transform.position = Map.Instance.XYToWorldPos(moveDirections[randomDir]);
+            //Map.Instance.SetExistingObjectCoords(this);
+            Map.Instance.SetOccupied(moveDirections[randomDir], this);
         }
     }
 
@@ -54,6 +56,8 @@ public class Medvedka : MapObject
         Debug.Log("Medvedka starts eating root");
 
         Map.Instance.FreeCoords(CurrentCoords);
+        //CoroutineAnimation.Instance.MoveTo(gameObject, root.transform.position);
+        //Map.Instance.SetOccupied(Map.Instance.WorldPosToXY(root.transform.position), this);
         transform.position = root.transform.position;
         GetComponent<Animator>().SetBool("Eating", true);
 
@@ -63,7 +67,7 @@ public class Medvedka : MapObject
 
     public override void DestroyThis()
     {
-        GameController.Instance.RemoveMedvedka(this);
+        GameController.Instance.KillMedvedka(this);
         base.DestroyThis();
     }
 }

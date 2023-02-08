@@ -13,7 +13,7 @@ public class Card : MonoBehaviour
     [SerializeField] private bool _persistent; // Whether or not card stays in hand at the start of each turn
 
     public bool Discardable { get => _discardable; }
-    public bool Persistent { get => _persistent; }
+    public bool Persistent { get => _persistent; set => _persistent = value; }
     public CardType CardType { get => _cardType; }
 
     private void Awake()

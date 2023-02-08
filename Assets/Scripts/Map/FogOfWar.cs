@@ -9,6 +9,8 @@ public class FogOfWar : MonoBehaviour
     private GameObject[,] _squares;
     [SerializeField] private GameObject _squarePrefab;
 
+    [SerializeField] private float _fadeSpeed;
+
     // Coordinates where AstralSalvations resides
     private List<Coords> _exclusions = new List<Coords>()
     {
@@ -61,10 +63,25 @@ public class FogOfWar : MonoBehaviour
     {
         if (Map.Instance.ValidateCoords(coords))
             if (_squares[coords.x, coords.y] != null)
-                DestroySquare(_squares[coords.x, coords.y]);
+                StartCoroutine(DestroySquare(_squares[coords.x, coords.y]));
     }
-    private void DestroySquare(GameObject square)
+    private IEnumerator DestroySquare(GameObject square)
     {
+        SpriteRenderer spriteRenderer = square.GetComponent<SpriteRenderer>();
+        Material squareMat = spriteRenderer.sharedMaterial;
+        Material copy = new Material(squareMat);
+        spriteRenderer.sharedMaterial = copy;
+        squareMat = spriteRenderer.sharedMaterial;
+
+        float fade = 1f;
+
+        while (fade > 0)
+        {
+            fade -= _fadeSpeed;
+            squareMat.SetFloat("_Fade", fade);
+            yield return new WaitForSeconds(0.1f);
+        }
+
         Destroy(square);
     }
 }

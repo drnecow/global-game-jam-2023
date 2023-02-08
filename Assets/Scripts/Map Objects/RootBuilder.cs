@@ -79,12 +79,10 @@ public class RootBuilder : MonoBehaviour
         if (_fireProof)
         {
             newRootObj.MakeFireProof();
-            _fireProof = false;
         }
         else if (_hardened)
         {
             newRootObj.MakeHardened();
-            _hardened = false;
         }
 
         // Записать позицию мыши
@@ -139,13 +137,13 @@ public class RootBuilder : MonoBehaviour
     {
         float rotation = root.transform.eulerAngles.z;
 
-        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
+        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
             rotation = 0f;
-        else if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
-            rotation = 270f;
-        else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
-            rotation = 90f;
-        else if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
+        else if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow)) 
+            rotation += 90f;
+        else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
+            rotation -= 90f;
+        else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
             rotation = 180f;
 
         root.transform.eulerAngles = new Vector3(0f, 0f, rotation);
@@ -170,14 +168,26 @@ public class RootBuilder : MonoBehaviour
                 root.transform.position = Map.Instance.XYToWorldPos(mouseCoords);
                 List<Coords> rootCoords = root.GetAllCoords();
 
-                if (CanPlace(root) || !EventSystem.current.IsPointerOverGameObject())
+                if (CanPlace(root))
                 {
                     if (!RootMap.Instance.IsEmpty(rootCoords))
                     {
+                        // First, destroy all non-burning and non-eaten root overlapping with placement coordinates
                         List<Coords> nonEmptyCoords = RootMap.Instance.GetNonEmpty(rootCoords);
-
                         foreach (Coords coord in nonEmptyCoords)
+                        {
+                            RootBlock removedRoot = RootMap.Instance.Roots[coord.x, coord.y];
+
+                            if (!removedRoot.IsBurning && !removedRoot.IsBeingEaten || (removedRoot.IsBurning && _fireProof))
+                                RootMap.Instance.EmptyCoords(coord);
+                        }
+
+                        // Then, check again if any overlapping coordinates are non-empty; if they are, destroy respective blocks in placed root
+                        nonEmptyCoords = RootMap.Instance.GetNonEmpty(rootCoords);
+                        foreach (Coords coord in nonEmptyCoords)
+                        {
                             root.DestroyObjectAt(coord);
+                        }
 
                         rootCoords = root.GetAllCoords();
                     }
@@ -196,7 +206,7 @@ public class RootBuilder : MonoBehaviour
                     Highlight.Instance.ClearHighlight();
 
                     _placementFinished = true;
-                    GameController.Instance.RootBeingPlaced = true;
+                    GameController.Instance.RootBeingPlaced = false;
                 }
             }
             else
@@ -215,8 +225,10 @@ public class RootBuilder : MonoBehaviour
         bool impassableTerrain = false;
         bool overlapsAllRoots = true;
         bool connected = false;
+        bool allBurning = false;
 
         List<MapObject> overlapObjects = new List<MapObject>();
+        int onFire = 0;
 
         // Is out of map?
         foreach (Coords coord in rootCoords)
@@ -240,15 +252,21 @@ public class RootBuilder : MonoBehaviour
         foreach (Coords coord in rootCoords)
         {
             if (Map.Instance.ValidateCoords(coord))
-                if (RootMap.Instance.Roots[coord.x, coord.y] == null)
+            {
+                RootBlock rootBlock = RootMap.Instance.Roots[coord.x, coord.y];
+                if (rootBlock == null)
                     overlapsAllRoots = false;
+                else
+                    if (rootBlock.IsBeingEaten)
+                        impassableTerrain = true;
+                    else if (rootBlock.IsBurning)
+                        onFire++;
+            }
         }
         // Is connected to any previously placed roots or to points of origin?
-        List<Coords> rootBlocks = root.GetAllCoords();
-
-        foreach(Coords block in rootBlocks)
+        foreach(Coords coord in rootCoords)
         {
-            List<Coords> neighbours = Map.Instance.GetNeighbours(block, Constants.NEIGHBOURS_1X1);
+            List<Coords> neighbours = Map.Instance.GetNeighbours(coord, Constants.NEIGHBOURS_1X1);
 
             foreach (Coords neighbour in neighbours)
             {
@@ -259,14 +277,35 @@ public class RootBuilder : MonoBehaviour
                     connected = true;
             }
         }
+        if (onFire == rootCoords.Count && onFire != 0)
+            allBurning = true;
 
-        //Debug.Log($"Out of map: {outOfMap}");
-        //Debug.Log($"Impassable terrain: {impassableTerrain}");
-        //Debug.Log($"Overlaps all roots: {overlapsAllRoots}");
-        //Debug.Log($"Connected to previous roots: {connected}");
+        /*Debug.Log($"Root coordinates: {rootCoords.Count}");
+        Debug.Log($"Roots on fire: {onFire}");
+        Debug.Log($"Out of map: {outOfMap}");
+        Debug.Log($"Impassable terrain: {impassableTerrain}");
+        Debug.Log($"Overlaps all roots: {overlapsAllRoots}");
+        Debug.Log($"Connected to previous roots: {connected}");
+        Debug.Log($"Overlaps all roots, they are all burning: {allBurning}");*/
 
-        if (outOfMap || impassableTerrain || overlapsAllRoots || !connected)
+        if (outOfMap || !connected || impassableTerrain)
             return false;
+
+        if (overlapsAllRoots)
+        {
+            if ((_fireProof || _hardened) && !allBurning)
+            {
+                Debug.Log("Overlaps all roots, not all of them are burning, is fireproof or hardened");
+                return true;
+            }
+            else if (overlapsAllRoots && _fireProof && allBurning)
+            {
+                Debug.Log("Overlaps all roots, they are all burning, but is fireproof");
+                return true;
+            }
+            else
+                return false;
+        }
         else
             return true;
     }
@@ -317,8 +356,9 @@ public class RootBuilder : MonoBehaviour
             fire.RunRootInteractionProcess(roots);
         }
 
-        if (_drilling)
-            _drilling = false;
+        _fireProof = false;
+        _hardened = false;
+        _drilling = false;
     }
     // Remove 3 squares of fog of war in all directions around specified root blocks
     private void RemoveFogOfWar(List<Coords> coords)

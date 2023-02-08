@@ -30,54 +30,42 @@ public class Fire : MapObject
 
         if (_isMovingForward)
         {
-            _currentPathCell++;
+            _currentPathCell = Mathf.Min(_currentPathCell + 2, _trajectoryPath.Count - 1);
             if (_currentPathCell == _trajectoryPath.Count - 1)
                 _isMovingForward = false;
         }
         else
         {
-            _currentPathCell--;
+            _currentPathCell = Mathf.Max(_currentPathCell - 2, 0); ;
             if (_currentPathCell == 0)
                 _isMovingForward = true;
         }
 
         Map.Instance.ClearExistingObjectCoords(this);
 
-        transform.position = Map.Instance.XYToWorldPos(_trajectoryPath[_currentPathCell]);
+        CoroutineAnimation.Instance.MoveTo(gameObject, Map.Instance.XYToWorldPos(_trajectoryPath[_currentPathCell]));
+        //transform.position = Map.Instance.XYToWorldPos(_trajectoryPath[_currentPathCell]);
 
         // Determine objects with which the fire interacted and send them to resolve interactions
-        List<Coords> newCoords = GetAllCoords();
+        //List<Coords> newCoords = GetAllCoords();
+        List<Coords> newCoords = GetAllCoordsAssumingCenter(_trajectoryPath[_currentPathCell]);
         Dictionary<Coords, MapObject> interactObjects = new Dictionary<Coords, MapObject>();
 
         foreach (Coords coord in newCoords)
             if (Map.Instance.GridArray[coord.x, coord.y] != null)
                 interactObjects.Add(coord, Map.Instance.GridArray[coord.x, coord.y]);
 
-        //Debug.Log(interactObjects.Count);
-        //foreach (Coords key in interactObjects.Keys)
-        //    Debug.Log(interactObjects[key].EntityType);
-
         if (interactObjects.Count > 0)
         {
-            //Debug.Log("Removing duplicates");
-
             Dictionary<Coords, MapObject> roots = interactObjects
                 .Where(entry => entry.Value.EntityType == EntityType.Root)
                 .ToDictionary(pair => pair.Key, pair => pair.Value);
-
-            //Debug.Log($"Roots: {roots.Count}");
-            //foreach (Coords key in roots.Keys)
-            //    Debug.Log(roots[key].EntityType);
 
             Dictionary<Coords, MapObject> withoutRoots = interactObjects
                 .GroupBy(pair => pair.Value)
                 .Where(entry => entry.Key.EntityType != EntityType.Root)
                 .Select(group => group.First())
                 .ToDictionary(pair => pair.Key, pair => pair.Value);
-
-            //Debug.Log($"Without roots: {withoutRoots.Count}");
-            //foreach (Coords key in withoutRoots.Keys)
-            //    Debug.Log(withoutRoots[key].EntityType);
 
             interactObjects.Clear();
 
@@ -87,14 +75,11 @@ public class Fire : MapObject
             foreach (KeyValuePair<Coords, MapObject> noRoot in withoutRoots)
                 interactObjects.Add(noRoot.Key, noRoot.Value);
 
-            //Debug.Log($"Final result: {interactObjects.Count}");
-            //foreach (Coords key in interactObjects.Keys)
-            //    Debug.Log(interactObjects[key].EntityType);
-
             ResolveContactAt(interactObjects);
         }
 
-        Map.Instance.SetExistingObjectCoords(this);
+        //Map.Instance.SetExistingObjectCoords(this);
+        Map.Instance.SetOccupied(_trajectoryPath[_currentPathCell], this);
     }
 
     private void ResolveContactAt(Dictionary<Coords, MapObject> interactObjects)

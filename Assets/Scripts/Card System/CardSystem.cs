@@ -24,6 +24,9 @@ public class CardSystem : MonoBehaviour
     public UnityEvent<int> OnDiscardSizeChanged;
     public UnityEvent<GameObject> OnCardPlayed;
 
+    private bool _isDiscarding = false;
+    private bool _isDrawing = false;
+
 
     private void Awake()
     {
@@ -56,7 +59,7 @@ public class CardSystem : MonoBehaviour
     }
     public void NewTurn()
     {
-        // Draw cards from deck, 4 or until it's empty 
+        // Draw cards from deck, 3 or until it's empty 
         Debug.Log($"New turn: deck size -- {_deck.Size}");
         DrawNewTurnCards();
     }
@@ -131,17 +134,27 @@ public class CardSystem : MonoBehaviour
     private void DrawNewTurnCards()
     {
         Debug.Log($"Deck size before drawing: {_deck.Size}");
-        List<CardType> _handCards = _deck.Draw(4);
+        List<CardType> _handCards = _deck.Draw(3);
         OnDeckSizeChanged.Invoke(_deck.Size);
         StartCoroutine(DrawCards(_handCards));
         Debug.Log($"Deck size after drawing: {_deck.Size}");
     }
     private IEnumerator DrawCards(List<CardType> cards)
     {
+        while (_isDiscarding)
+            yield return null;
+
+        _isDrawing = true;
+
         foreach (CardType card in cards)
         {    
             GameObject cardPrefab = Instantiate(_cardPrefabs[(int)card - 1]);
             _handPrefabs.Add(cardPrefab);
+
+            Card cardComponent = cardPrefab.GetComponent<Card>();
+            if (cardComponent.Persistent)
+                cardComponent.Persistent = false;
+
             RectTransform rectTransform = cardPrefab.GetComponent<RectTransform>();
             rectTransform.SetParent(_handObject);
 
@@ -149,16 +162,26 @@ public class CardSystem : MonoBehaviour
             yield return StartCoroutine(anim.DrawCard());
             RearrangeHand();
         }
+
+        _isDrawing = false;
     }
     private IEnumerator DiscardCards(List<GameObject> cardPrefabs)
     {
+        while (_isDrawing)
+            yield return null;
+
+        _isDiscarding = true;
+
         foreach (GameObject cardPrefab in cardPrefabs)
         {
             CardAnimation anim = cardPrefab.GetComponent<CardAnimation>();
             yield return StartCoroutine(anim.DiscardCard());
+            RearrangeHand();
 
             Destroy(cardPrefab);
         }
+
+        _isDiscarding = false;
     }
     private IEnumerator AddCards(List<CardType> cards)
     {
@@ -171,9 +194,9 @@ public class CardSystem : MonoBehaviour
 
             CardAnimation anim = cardPrefab.GetComponent<CardAnimation>();
             yield return StartCoroutine(anim.AddToHand());
-        }
 
-        RearrangeHand();
+            RearrangeHand();
+        }
     }
 
     private void RearrangeHand()

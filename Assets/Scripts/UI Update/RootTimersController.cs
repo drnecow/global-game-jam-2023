@@ -7,7 +7,7 @@ public class RootTimersController : MonoBehaviour
     public static RootTimersController Instance { get; private set; }
 
     [SerializeField] GameObject _timerPrefab;
-    Dictionary<RootBlock, RootTimer> _timers = new Dictionary<RootBlock, RootTimer>();
+    Dictionary<RootBlock, RootTimer> _timers;
 
 
     private void Awake()
@@ -19,12 +19,15 @@ public class RootTimersController : MonoBehaviour
         }
         else
             Instance = this;
+
+        _timers = new Dictionary<RootBlock, RootTimer>();
     }
     private void Start()
     {
         GameEventSystem.Instance.OnRootLifeTimerSet.AddListener((rootBlock, value) => SetTimerUI(rootBlock, value));
         GameEventSystem.Instance.OnRootLifeTimerChanged.AddListener((rootBlock, newValue) => _timers[rootBlock].UpdateTimerValue(newValue));
-        GameEventSystem.Instance.OnRootLifeTimerExpired.AddListener((rootBlock) => _timers.Remove(rootBlock));
+        GameEventSystem.Instance.OnRootLifeTimerExpired.AddListener((rootBlock) => { if (_timers.ContainsKey(rootBlock)) _timers.Remove(rootBlock); });
+        GameEventSystem.Instance.OnRootLifeTimerStopped.AddListener((rootBlock) => { Destroy(_timers[rootBlock].gameObject); _timers.Remove(rootBlock); });
     }
 
     private void SetTimerUI(RootBlock rootBlock, int value)

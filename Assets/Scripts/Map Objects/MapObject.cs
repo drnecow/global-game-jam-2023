@@ -54,6 +54,36 @@ public abstract class MapObject : MonoBehaviour
         Debug.Log($"Object at coordinates ({coords.x}, {coords.y}) doesn't belong to this MapObject");
         return null;
     }
+    public GameObject GetObjectAtAssumingCenter(Coords objCoords, Coords centerCoords)
+    {
+        int xDisplacement = objCoords.x - centerCoords.x;
+        int yDisplacement = objCoords.y - centerCoords.y;
+
+        Vector2 displVector = new Vector2(xDisplacement, yDisplacement);
+
+        int rotation = (int)transform.eulerAngles.z;
+
+        // Transform the displacement vector based on the rotation
+        if (rotation != 0 && rotation != 90 && rotation != 180 && rotation != 270)
+        {
+            Debug.Log($"Rotation isn't equal to either 0, 90, 180, or 270: {rotation}, can't get object");
+            return null;
+        }
+        else if (rotation == 270) // equals -90 in Inspector
+            displVector = new Vector2(displVector.y, -displVector.x);
+        else if (rotation == 180) // equals -180 in Inspector
+            displVector = new Vector2(-displVector.x, -displVector.y);
+        else if (rotation == 90) // equals -270 in Inspector
+            displVector = new Vector2(-displVector.y, displVector.x);
+
+        // Find object corresponding to the displacement vector
+        for (int i = 0; i < _cellDisplacements.Count; i++)
+            if (_cellDisplacements[i] == displVector)
+                return _cells[i];
+
+        Debug.Log($"Object at coordinates ({objCoords.x}, {objCoords.y}) doesn't belong to this MapObject");
+        return null;
+    }
     public virtual void DestroyObjectAt(Coords coords)
     {
         GameObject obj = GetObjectAt(coords);
@@ -88,6 +118,34 @@ public abstract class MapObject : MonoBehaviour
 
         return coords;
     }
+    public List<Coords> GetAllCoordsAssumingCenter(Coords centerCoords)
+    {
+        List<Coords> coords = new List<Coords>();
 
-    
+        foreach (Vector2 displ in _cellDisplacements)
+        {
+            Vector2 displVector = displ;
+
+            int rotation = (int)transform.eulerAngles.z;
+
+            // Transform the displacement vector based on the rotation
+            if (rotation != 0 && rotation != 90 && rotation != 180 && rotation != 270)
+            {
+                Debug.Log($"Rotation isn't equal to either 0, 90, 180, or 270: {rotation}, can't get object");
+                return null;
+            }
+            else if (rotation == 270) // equals -90 in Inspector
+                displVector = new Vector2(displVector.y, -displVector.x);
+            else if (rotation == 180) // equals -180 in Inspector
+                displVector = new Vector2(-displVector.x, -displVector.y);
+            else if (rotation == 90) // equals -270 in Inspector
+                displVector = new Vector2(-displVector.y, displVector.x);
+
+            coords.Add(new Coords(centerCoords.x + (int)displVector.x, centerCoords.y + (int)displVector.y));
+        }
+
+        return coords;
+    }
+
+
 }

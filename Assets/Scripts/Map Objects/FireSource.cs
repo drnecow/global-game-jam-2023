@@ -18,14 +18,17 @@ public class FireSource
         List<Coords> possibleSpreadTargets = new List<Coords>();
 
         foreach (RootBlock root in _affectedRoots) {
-            List<Coords> neighbours = Map.Instance.GetNeighbours(Map.Instance.WorldPosToXY(root.transform.position), Constants.NEIGHBOURS_1X1);
-
-            foreach (Coords neighbour in neighbours)
+            if (root != null)
             {
-                RootBlock neighbourBlock = RootMap.Instance.Roots[neighbour.x, neighbour.y];
+                List<Coords> neighbours = Map.Instance.GetNeighbours(Map.Instance.WorldPosToXY(root.transform.position), Constants.NEIGHBOURS_1X1);
 
-                if (neighbourBlock != null && !neighbourBlock.IsBurning && !neighbourBlock.IsFireProof && !neighbourBlock.IsImmersedInWater)
-                    possibleSpreadTargets.Add(neighbour);
+                foreach (Coords neighbour in neighbours)
+                {
+                    RootBlock neighbourBlock = RootMap.Instance.Roots[neighbour.x, neighbour.y];
+
+                    if (neighbourBlock != null && !neighbourBlock.IsBurning && !neighbourBlock.IsFireProof && !neighbourBlock.IsImmersedInWater)
+                        possibleSpreadTargets.Add(neighbour);
+                }
             }
         }
 

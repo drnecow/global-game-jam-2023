@@ -56,6 +56,12 @@ public class RootBlock : MonoBehaviour
 
         Debug.Log($"Life timer of {this} set to {newValue}");
     }
+    public void ResetLifeTimer()
+    {
+        _lifeTimer = 0;
+        GameEventSystem.Instance.OnRootLifeTimerStopped.Invoke(this);
+        Debug.Log($"Life timer of {this} reset");
+    }
     public void DecrementLifeTimer()
     {
         _lifeTimer--;
@@ -65,15 +71,24 @@ public class RootBlock : MonoBehaviour
             Debug.Log($"Life timer of {this} reached 0, it will be destroyed this turn");
             GameController.Instance.AddTimedOutRootBlock(this);
 
-            if (_eater != null)
+            List<Coords> isolatedRoots = RootMap.Instance.FindAllDetachedRoots();
+
+            foreach (Coords coord in isolatedRoots)
+            {
+                Debug.Log($"({coord.x}, {coord.y})");
+                GameController.Instance.AddTimedOutRootBlock(RootMap.Instance.Roots[coord.x, coord.y]);
+            }
+
+            /*if (_eater != null)
             {
                 GameController.Instance.AddMedvedka(_eater);
                 Map.Instance.SetExistingObjectCoords(_eater);
                 _eater.GetComponent<Animator>().SetBool("Eating", false);
-            }
+            }*/
         }
         else
         {
+            Debug.Log($"Decrementing life timer of {this} to {_lifeTimer}");
             GameEventSystem.Instance.OnRootLifeTimerChanged.Invoke(this, _lifeTimer);
             Debug.Log($"Life timer of {this} set to {_lifeTimer}");
         }

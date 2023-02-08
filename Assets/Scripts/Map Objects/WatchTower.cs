@@ -14,8 +14,8 @@ public class WatchTower : MapObject
     {
         List<Coords> neighbours5 = new List<Coords>();
 
-        for (int i = -5; i < 6; i++)
-            for (int j = -5; j < 6; j++)
+        for (int i = -6; i < 7; i++)
+            for (int j = -6; j < 7; j++)
                 neighbours5.Add(new Coords(CurrentCoords.x + i, CurrentCoords.y + j));
 
         FogOfWar.Instance.RemoveSquaresAt(neighbours5);

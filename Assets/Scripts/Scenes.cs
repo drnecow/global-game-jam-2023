@@ -7,8 +7,10 @@ using UnityEngine.SceneManagement;
 public class Scenes : MonoBehaviour
 {
     public static Scenes Instance { get; private set; }
+    public bool Victory { get => _victory; set => _victory = value; }
 
     private bool _cutsceneWatched;
+    private bool _victory;
 
     private void Awake()
     {
@@ -41,6 +43,11 @@ public class Scenes : MonoBehaviour
     {
         DontDestroyOnLoad(this);
         UnityEngine.SceneManagement.SceneManager.LoadScene(0);
+    }
+    public void VictoryOrDefeat()
+    {
+        DontDestroyOnLoad(this);
+        SceneManager.LoadScene(3);
     }
     public void Quit()
     {

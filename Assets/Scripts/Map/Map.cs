@@ -31,8 +31,9 @@ public class Map : MonoBehaviour
     public static Map Instance { get; private set; } // Map is a Singleton
     public int Width { get => _width; }
     public int Height { get => _height; }
+    public float CellSize { get => _cellSize; }
     public MapObject[,] GridArray { get => _gridArray; }
-
+    
 
     [SerializeField] private int _width;
     [SerializeField] private int _height;
@@ -147,6 +148,18 @@ public class Map : MonoBehaviour
             obj.gameObject.transform.position = XYToWorldPos(coords);
             List<Coords> objParts = obj.GetAllCoords();
 
+            foreach (Coords part in objParts)
+                _gridArray[part.x, part.y] = obj;
+        }
+        else
+            Debug.Log($"Invalid coordinates given: ({coords.x}, {coords.y})");
+    }
+    public void SetOccupied(Coords coords, MapObject obj)
+    {
+        if (ValidateCoords(coords))
+        {
+            List<Coords> objParts = obj.GetAllCoordsAssumingCenter(coords);
+            
             foreach (Coords part in objParts)
                 _gridArray[part.x, part.y] = obj;
         }

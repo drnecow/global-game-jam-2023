@@ -7,7 +7,7 @@ public class GameController : MonoBehaviour
     public static GameController Instance { get; private set; } // GameController is a Singleton
     public bool RootBeingPlaced { get => _rootBeingPlaced; set => _rootBeingPlaced = value; }
 
-    private int _turnTimer = 25;
+    private int _turnTimer = 11;
 
     [SerializeField] List<MedvedkaNest> _medvedkaNests;
     private List<Medvedka> _medvedkasOnMap;
@@ -47,6 +47,9 @@ public class GameController : MonoBehaviour
         GameEventSystem.Instance.OnPlayerTurnPassed.AddListener(() => _playerInputPassed = true);
         GameEventSystem.Instance.OnEndTurn.AddListener(() => ResolveTurn());
 
+        GameEventSystem.Instance.OnWinGame.AddListener(() => { Scenes.Instance.Victory = true; Scenes.Instance.VictoryOrDefeat(); });
+        GameEventSystem.Instance.OnLoseGame.AddListener(() => { Scenes.Instance.Victory = false; Scenes.Instance.VictoryOrDefeat(); });
+
         MapSetup.Instance.PopulateMap();
         CardSystem.Instance.StartGame();
         ResolveTurn();
@@ -71,8 +74,8 @@ public class GameController : MonoBehaviour
         SpawnMedvedkas();
         MoveMedvedkas();
         RemoveEatingMedvedkas();
-        MoveFire();
         SpreadFireSource();
+        MoveFire();
     }
     private void ResolvePostInputActions()
     {
@@ -135,11 +138,11 @@ public class GameController : MonoBehaviour
         if (!_timeredRootBlocks.Contains(rootBlock))
         {
             _timeredRootBlocks.Add(rootBlock);
-            Debug.Log($"Added root block {rootBlock}");
+            Debug.Log($"Added timered root block {rootBlock}");
         }
         else
         {
-            Debug.Log($"Root block {rootBlock} is already added");
+            Debug.Log($"Timered root block {rootBlock} is already added");
         }
     }
     public void AddMedvedka(Medvedka medvedka)
@@ -193,6 +196,22 @@ public class GameController : MonoBehaviour
         }
         else
             Debug.Log("No suitable medvedka to be removed");
+    }
+    public void KillMedvedka(Medvedka medvedka)
+    {
+        RemoveMedvedka(medvedka);
+
+        RootBlock toRemove = null;
+
+        foreach (RootBlock rootBlock in _timeredRootBlocks)
+        {
+            if (rootBlock.Eater == medvedka)
+            {
+                toRemove = rootBlock;
+                break;
+            }
+        }
+        _timeredRootBlocks.Remove(toRemove);
     }
     public void RemoveMedvedkaNest(MedvedkaNest medvedkaNest)
     {

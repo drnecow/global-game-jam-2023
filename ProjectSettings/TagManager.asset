@@ -45,6 +45,9 @@ TagManager:
   - name: Tree
     uniqueID: 594980445
     locked: 0
+  - name: FireTrajectory
+    uniqueID: 4249505355
+    locked: 0
   - name: MedvedkaNest
     uniqueID: 1716493607
     locked: 0
@@ -54,17 +57,23 @@ TagManager:
   - name: Roots
     uniqueID: 738981679
     locked: 0
-  - name: Medvedka
-    uniqueID: 269581521
-    locked: 0
   - name: InteractiveObject
     uniqueID: 1688059681
+    locked: 0
+  - name: WatchTower
+    uniqueID: 4171470403
+    locked: 0
+  - name: Medvedka
+    uniqueID: 269581521
     locked: 0
   - name: Fire
     uniqueID: 346086779
     locked: 0
   - name: HighlightSquare
     uniqueID: 3175772365
+    locked: 0
+  - name: GridMarkup
+    uniqueID: 4089276691
     locked: 0
   - name: FogOfWar
     uniqueID: 1546208999
